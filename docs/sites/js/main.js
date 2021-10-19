@@ -60,7 +60,7 @@ function juegoNuevo(){
         col = 8
         maxfichas = 28
         ytablero = 560
-        imageTablero.src = "./sites/img/tablero7x8.png";
+        imageTablero.src = "./sites/img/tablero7x8.jpg";
     }else if (tamanio == 3){
         cantGanadora = 6;
         paraEmpatar = 72;
@@ -68,7 +68,7 @@ function juegoNuevo(){
         col = 9
         maxfichas = 36
         ytablero = 645
-        imageTablero.src = "./sites/img/tablero8x9.png";
+        imageTablero.src = "./sites/img/tablero8x9.jpg";
     }
     crearMatriz();
     imageTablero.onload = function(){
