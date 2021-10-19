@@ -55,6 +55,16 @@
               <option value="9">Verde</option>
             </select>
         </div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Seleccionar tamaño del tablero</h5>
+        </div>
+        <div class="modal-body">
+            <select name="color" id="tamanio" title="Tamaño del tablero">
+              <option value="1">6x7</option>
+              <option value="2">7x8</option>
+              <option value="3">8x9</option>
+            </select>
+        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="empezar btn btn-primary" data-bs-dismiss="modal">Empezar</button>
@@ -63,7 +73,7 @@
     </div>
   </div>  
   <h2 id="turno"></h2>
-  <canvas id="juego" height="520" width="980"></canvas>
+  <canvas id="juego" height="690" width="1150"></canvas>
   <label id="timer"></label>
   <script src="sites/js/ficha.js"></script>
   <script src="sites/js/tablero.js"></script>

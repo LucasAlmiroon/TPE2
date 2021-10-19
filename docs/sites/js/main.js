@@ -1,6 +1,3 @@
-const MAXFICHAS = 22;
-const COL = 7;
-const FILAS = 6;
 
 let canvas = document.querySelector("#juego");
 let ctx = canvas.getContext("2d");
@@ -13,12 +10,18 @@ let cliqueado;
 let turno = true;
 let ganador = 0;
 let timer = 300;
+let maxfichas = 22;
+let col = 7;
+let filas = 6;
+let ytablero = 475;
+let cantGanadora = 4;
+let paraEmpatar = 44;
 
 //Crea la matriz con la cantidad de columnas y filas.
 function crearMatriz(){    
-    for (x = 0; x < COL; x++){
+    for (x = 0; x < col; x++){
       matriz[x] = [];
-      for (y = 0; y < FILAS; y++){
+      for (y = 0; y < filas; y++){
         matriz[x][y] = 0;
       }
     }
@@ -27,7 +30,7 @@ function crearMatriz(){
 function CrearJugadores(){
     if(document.querySelector("#nombre1").value != "" && document.querySelector("#nombre2").value != "" && document.querySelector("#colorF1").value != document.querySelector("#colorF2").value){
         jugador1 = new Jugador(document.querySelector("#nombre1").value,document.querySelector("#colorF1").value,true,false,20,20);
-        jugador2 = new Jugador(document.querySelector("#nombre2").value,document.querySelector("#colorF2").value,false,false,20,850);
+        jugador2 = new Jugador(document.querySelector("#nombre2").value,document.querySelector("#colorF2").value,false,false,20,1020);
 
         juegoNuevo();
     }else{
@@ -38,11 +41,36 @@ function CrearJugadores(){
 }
 //Se crea un juego nuevo, por ahora solo crea las fichas.
 function juegoNuevo(){
-    crearMatriz();
+    let tamanio = document.querySelector("#tamanio").value;
     document.querySelector("#turno").innerHTML = "Turno jugador: " + jugador1.name;
     //Se crea el tablero, con una imagen de fondo.
     let imageTablero = new Image();
-    imageTablero.src = "./sites/img/tablero.png";
+    if(tamanio == 1){
+        imageTablero.src = "./sites/img/tablero.png";
+        maxfichas = 22;
+        col = 7;
+        filas = 6;
+        ytablero = 475;
+        cantGanadora = 4;
+        paraEmpatar = 44;
+    }else if (tamanio == 2){
+        cantGanadora = 5;
+        paraEmpatar = 56;
+        filas = 7
+        col = 8
+        maxfichas = 28
+        ytablero = 560
+        imageTablero.src = "./sites/img/tablero7x8.png";
+    }else if (tamanio == 3){
+        cantGanadora = 6;
+        paraEmpatar = 72;
+        filas = 8
+        col = 9
+        maxfichas = 36
+        ytablero = 645
+        imageTablero.src = "./sites/img/tablero8x9.png";
+    }
+    crearMatriz();
     imageTablero.onload = function(){
         let imageBackground = new Image();
         imageBackground.src = "./sites/img/background.png";
@@ -54,22 +82,30 @@ function juegoNuevo(){
             
         }
     }
-    jugador1.generarFichas(ctx);
-    jugador2.generarFichas(ctx);
+    jugador1.generarFichas(ctx,maxfichas);
+    jugador2.generarFichas(ctx,maxfichas);
 
     document.querySelector("#botonPrincipal").style.margin = 0;
     document.querySelector(".juegoNuevo").innerHTML = 'Reiniciar';
 
-    setInterval(function(){
+    let interval = setInterval(function(){
         timer--;
         if(timer >= 1){
             document.querySelector("#timer").innerHTML = 'Restan: ' + timer + ' segundos';
+            chequearGanador();
+            if(jugador1.ganador || jugador2.ganador){
+                clearInterval(interval);
+                document.querySelector("#timer").innerHTML = 'Hay un ganador';
+            }
         }else if(timer <= 0){
             console.log("entra")
-            document.querySelector("#timer").innerHTML = 'Restan : 0 segundos';
+            document.querySelector("#timer").innerHTML = 'Se termino el tiempo';
             chequearGanador();
+            clearInterval(interval);
         }
     },1000)
+    console.log(filas);
+    console.log(col);
 }
 
 //Dibuja cada ficha del arreglo y el tablero.
@@ -106,7 +142,7 @@ function clickEnFicha(x,y){
       for (let i = 0; i < jugador2.fichas.length; i++){
         const elemento = jugador2.fichas[i];
         console.log(x + " - " + y); 
-        if (elemento.isPointInside(x,y) && x > 800){
+        if (elemento.isPointInside(x,y) && x > 1000){
           
           return elemento;
         }
@@ -129,64 +165,18 @@ function onMouseDown(e){
 //Setea la posicion de Y de la ficha en el tablero, segun la cantidad de fichas que tiene por debajo.
 function setY(a){
     let j = 0;
+    let y = 0;
     //En este while, se verifica si hay una ficha del jugador uno o dos debajo, si es asi, suma una fila.
-    while(matriz[a][j] == 1 || matriz[a][j] == 2 && j < FILAS){
+    while(matriz[a][j] == 1 || matriz[a][j] == 2 && j < filas){
         j++;
     }
     if(cliqueado){
-        switch (j) {
-            case 0:
-                if (jugador1.turno){
-                    matriz[a][j] = 1;
-                }else{
-                    matriz[a][j] = 2;
-                }
-                return 473;
-                break;
-            case 1:
-                if (jugador1.turno){
-                    matriz[a][j] = 1;
-                }else{
-                    matriz[a][j] = 2;
-                }
-                return 390;
-                break;
-            case 2:
-                if (jugador1.turno){
-                    matriz[a][j] = 1;
-                }else{
-                    matriz[a][j] = 2;
-                }
-                return 305;
-                break;
-            case 3:
-                if (jugador1.turno){
-                    matriz[a][j] = 1;
-                }else{
-                    matriz[a][j] = 2;
-                }
-                return 217;
-                break;
-            case 4:
-                if (jugador1.turno){
-                    matriz[a][j] = 1;
-                }else{
-                    matriz[a][j] = 2;
-                }
-                return 141;
-                break;
-            case 5:
-                if (jugador1.turno){
-                    matriz[a][j] = 1;
-                }else{
-                    matriz[a][j] = 2;
-                }
-                return 55;
-                break;
-            default:
-                return 50;
-                break;
+        if (jugador1.turno){
+            matriz[a][j] = 1;
+        }else{
+            matriz[a][j] = 2;
         }
+        return y =  ytablero - (j*85);
     }
 }
 //Seteo los turnos y muestro en pantalla.  
@@ -231,56 +221,57 @@ function onMouseUp(e){
     if(cliqueado != null){  
       let x = e.layerX;
       let y;
-      if (x >= 214 && x <= 283){
-         y = setY(0);
-        dibujado(248,y);
+      
+    if (x >= 216 && x <= 295){
+        y = setY(0);
+        dibujado(250,y);
         setTurno();
-      }else if (x >= 298 && x <= 366){
+    }else if (x >= 296 && x <= 380){
         y = setY(1);
-        dibujado(332,y);
-        dibujarFichas();
+        dibujado(335,y);
         setTurno();
-      }else if (x >= 380 && x <= 448){
+    }else if (x >= 381 && x <= 465){
         y = setY(2);
-        dibujado(414,y);
-        dibujarFichas();
+        dibujado(420,y);
         setTurno();
-      }else if(x >= 467 && x <= 535){
+    }else if(x >= 466 && x <= 550){
         y = setY(3);
-        dibujado(500,y);
-        dibujarFichas();
+        dibujado(505,y);
         setTurno();
-      }else if(x >= 549 && x <= 615){
+    }else if(x >= 551 && x <= 635){
         y = setY(4);
-        dibujado(583,y);
-        dibujarFichas();
+        dibujado(590,y);
         setTurno();
-      }else if(x >= 634 && x <= 700){
+    }else if(x >= 636 && x <= 720){
         y = setY(5);
-        dibujado(668,y);
-        dibujarFichas();
+        dibujado(673,y);
         setTurno();
-      }else if(x >= 715 && x <= 785){
+    }else if(x >= 721 && x <= 805){
         y = setY(6);
-        dibujado(749,y);
-        dibujarFichas();
+        dibujado(758,y);
         setTurno();
-      }else{
+    }else if(ytablero >= 560 && x >=806 && x <= 890){
+        y = setY(7);
+        dibujado(840,y);
+        setTurno();
+    }else if (ytablero == 645 && x >= 891 && x <= 976){
+        y = setY(8);
+        dibujado(920,y);
+        setTurno();
+    }else{
         if(jugador1.turno){
           dibujado(50,50);
-          dibujarFichas();
         }else{
-          dibujado(850,50);
-          dibujarFichas();
+          dibujado(1020,50);
         }
-      }
-      cliqueado = null;
-      if(tablero.verificarTablero() == 1){
-          jugador1.ganador = true;
-      }else if (tablero.verificarTablero() == 2){
-          jugador2.ganador = true;
-      };
-      chequearGanador();
+    }
+    cliqueado = null;
+    if(tablero.verificarTablero(filas,col,cantGanadora,paraEmpatar) == 1){
+        jugador1.ganador = true;
+    }else if (tablero.verificarTablero(filas,col,cantGanadora,paraEmpatar) == 2){
+        jugador2.ganador = true;
+    };
+        chequearGanador();
     }
   }
   

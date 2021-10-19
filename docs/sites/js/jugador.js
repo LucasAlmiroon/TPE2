@@ -12,7 +12,7 @@ class Jugador {
 
     }
     
-    generarFichas(ctx){
+    generarFichas(ctx,maxfichas){
         let sety = this.sety;
         let setx = this.setx;
         let fichas = this.fichas;
@@ -21,7 +21,7 @@ class Jugador {
         image.src = "./sites/img/"+ this.colorF + ".png";
         image.onload = function(){
             
-            for(let i = 0; i < MAXFICHAS; i ++){
+            for(let i = 0; i < maxfichas; i ++){
                 let ficha = new Ficha(((Math.random()*100)+setx),((Math.random()*400)+sety),ctx,32,image);
                 fichas.push(ficha);
             }
